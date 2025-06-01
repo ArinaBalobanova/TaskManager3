@@ -11,27 +11,47 @@ namespace TaskManager
         {
             _db = db;
             InitializeComponent();
+            InitializeComponents();
             LoadTasks();
+
+        }
+        private void InitializeComponents()
+        {
+            listViewTasks.View = View.Details;
+            listViewTasks.FullRowSelect = true;
+            listViewTasks.GridLines = true;
+            var taskColumns = new (string Text, int Width)[]
+            {
+        ("Название", 150),
+        ("Описание", 250),
+        ("Дедлайн", 100),
+        ("Исполнитель", 150)
+            };
+
+            foreach (var column in taskColumns)
+            {
+                listViewTasks.Columns.Add(column.Text, column.Width);
+            }
         }
 
-        
-        private async void LoadTasks()
+        public async void LoadTasks()
         {
 
-            listBoxTasks.Items.Clear();
-
-            var header = $"{"Название",-30} | {"Описание",-50} | {"Дедлайн",-20} | {"Исполнитель",-20}";
-            listBoxTasks.Items.Add(header);
-            listBoxTasks.Items.Add(new string('-', header.Length));
+            listViewTasks.Items.Clear();
 
             var tasks = await _db.Tasks.ToListAsync();
 
             foreach (var task in tasks)
             {
-                
-                listBoxTasks.Items.Add(task);
+                var item = new ListViewItem(task.Title);
+                item.SubItems.Add(task.FullDescription);
+                item.SubItems.Add(task.Deadline.ToString("d"));
+                item.SubItems.Add(task.AssignedTo);
+
+                item.Tag = task;
+
+                listViewTasks.Items.Add(item);
             }
-            
         }
         private async void buttonAdd_Click(object sender, EventArgs e)
         {
@@ -46,7 +66,6 @@ namespace TaskManager
                 });
                 await _db.SaveChangesAsync();
 
-                // Очистка полей
                 textBoxTitle.Clear();
                 textBoxDescription.Clear();
                 textBoxAssignedTo.Clear();
@@ -60,19 +79,36 @@ namespace TaskManager
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            
+
             base.OnFormClosing(e);
         }
 
-        private void listBoxTasks_SelectedIndexChanged_1(object sender, EventArgs e)
+        private void listViewTasks_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBoxTasks.SelectedItem != null && listBoxTasks.SelectedItem is Task selectedTask)
+            if (listViewTasks.SelectedItems.Count > 0)
             {
-                var detailForm = new TaskDetailForm();
-                detailForm.SetTask(selectedTask, _db);
-                detailForm.ShowDialog();
-                LoadTasks();
+                var selectedItem = listViewTasks.SelectedItems[0];
+
+                if (selectedItem.Tag is Task selectedTask)
+                {
+                    var detailForm = new TaskDetailForm();
+                    detailForm.SetTask(selectedTask, _db, this);
+                    detailForm.ShowDialog(); ;
+
+                    LoadTasks();
+                }
             }
+
         }
+        public void ClearSelection()
+        {
+            if (listViewTasks.SelectedItems.Count > 0)
+            {
+                listViewTasks.SelectedItems[0].Selected = false;
+            }
+
+            listViewTasks.Focus();
+        }
+
     }
 }

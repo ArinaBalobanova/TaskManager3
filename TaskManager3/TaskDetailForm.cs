@@ -6,6 +6,7 @@ namespace TaskManager
     {
         private Task _currentTask;
         private AppDbContext _db;
+        private TaskListForm _taskListForm;
 
         public TaskDetailForm()
         {
@@ -13,11 +14,11 @@ namespace TaskManager
             
         }
         
-        public void SetTask(Task task, AppDbContext db)
+        public void SetTask(Task task, AppDbContext db, TaskListForm taskListForm)
         {
             _currentTask = task;
             _db = db;
-            
+            _taskListForm = taskListForm;
 
             textBoxEditTitle.Text = task.Title;
             textBoxEditDescription.Text = task.FullDescription;
@@ -80,6 +81,9 @@ namespace TaskManager
 
             _db.Tasks.Update(_currentTask);
             await _db.SaveChangesAsync();
+
+            this.DialogResult = DialogResult.OK;
+
             this.Close();
         }
     }

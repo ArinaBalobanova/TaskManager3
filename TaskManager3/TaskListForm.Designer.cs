@@ -32,7 +32,6 @@ namespace TaskManager
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TaskListForm));
             textBoxTitle = new TextBox();
             buttonAdd = new Button();
-            listBoxTasks = new ListBox();
             textBoxDescription = new TextBox();
             textBoxAssignedTo = new TextBox();
             dateTimePickerDeadline = new DateTimePicker();
@@ -41,6 +40,7 @@ namespace TaskManager
             lblTaskDescription = new Label();
             lblTaskDeadline = new Label();
             lblTaskAssignedTo = new Label();
+            listViewTasks = new ListView();
             SuspendLayout();
             // 
             // textBoxTitle
@@ -61,16 +61,6 @@ namespace TaskManager
             buttonAdd.Text = "Добавить задачу";
             buttonAdd.UseVisualStyleBackColor = true;
             buttonAdd.Click += buttonAdd_Click;
-            // 
-            // listBoxTasks
-            // 
-            listBoxTasks.BackColor = SystemColors.Window;
-            listBoxTasks.FormattingEnabled = true;
-            listBoxTasks.Location = new Point(26, 38);
-            listBoxTasks.Name = "listBoxTasks";
-            listBoxTasks.Size = new Size(749, 164);
-            listBoxTasks.TabIndex = 3;
-            listBoxTasks.SelectedIndexChanged += listBoxTasks_SelectedIndexChanged_1;
             // 
             // textBoxDescription
             // 
@@ -139,12 +129,22 @@ namespace TaskManager
             lblTaskAssignedTo.TabIndex = 11;
             lblTaskAssignedTo.Text = "Исполнитель";
             // 
+            // listViewTasks
+            // 
+            listViewTasks.Location = new Point(26, 48);
+            listViewTasks.Name = "listViewTasks";
+            listViewTasks.Size = new Size(749, 154);
+            listViewTasks.TabIndex = 12;
+            listViewTasks.UseCompatibleStateImageBehavior = false;
+            listViewTasks.SelectedIndexChanged += listViewTasks_SelectedIndexChanged;
+            // 
             // TaskListForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(834, 498);
+            Controls.Add(listViewTasks);
             Controls.Add(lblTaskAssignedTo);
             Controls.Add(lblTaskDeadline);
             Controls.Add(lblTaskDescription);
@@ -153,7 +153,6 @@ namespace TaskManager
             Controls.Add(dateTimePickerDeadline);
             Controls.Add(textBoxAssignedTo);
             Controls.Add(textBoxDescription);
-            Controls.Add(listBoxTasks);
             Controls.Add(buttonAdd);
             Controls.Add(textBoxTitle);
             Name = "TaskListForm";
@@ -165,7 +164,6 @@ namespace TaskManager
         #endregion
         private TextBox textBoxTitle;
         private Button buttonAdd;
-        private ListBox listBoxTasks;
         private TextBox textBoxDescription;
         private TextBox textBoxAssignedTo;
         private DateTimePicker dateTimePickerDeadline;
@@ -174,5 +172,6 @@ namespace TaskManager
         private Label lblTaskDescription;
         private Label lblTaskDeadline;
         private Label lblTaskAssignedTo;
+        private ListView listViewTasks;
     }
 }
